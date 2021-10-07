@@ -1,0 +1,137 @@
+<LinearLayout
+        android:id="@+id/sudokuGridLayout"
+        android:layout_width="409dp"
+        android:layout_height="354dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/gridLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.005">
+
+    </LinearLayout>
+
+<GridLayout
+        android:id="@+id/sudokuGridLayout"
+        android:layout_width="414dp"
+        android:layout_height="426dp"
+        android:columnCount="9"
+        android:duplicateParentState="true"
+        android:rowCount="9"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+
+Button button = (Button) view;
+button.setBackgroundDrawable(clicked);
+if (current_button != null && current_button != button) {
+    current_button.setBackgroundDrawable(unclicked);
+}
+current_button = button;
+
+
+int x = ((int[]) view.getTag())[0];
+int y = ((int[]) view.getTag())[1];
+TextView text = findViewById(R.id.textView);
+text.setText(x + " " + y);
+text.setTextColor(Color.RED);
+
+<RelativeLayout
+        android:id="@+id/sudokuGridLayout"
+        android:layout_width="429dp"
+        android:layout_height="440dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+
+<GridLayout
+        android:id="@+id/sudokuGridLayout"
+        android:layout_width="429dp"
+        android:layout_height="440dp"
+        android:columnCount="9"
+        android:rowCount="9"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+        
+GridLayout gridlayout = findViewById(R.id.sudokuGridLayout);
+        LinearLayout.LayoutParams buttonlayout = new LinearLayout.LayoutParams(120,120);
+
+        //Button layouts in grid for different states
+        final GradientDrawable normal = new GradientDrawable();
+        normal.setShape(GradientDrawable.RECTANGLE);
+        normal.setStroke(2, Color.BLACK);
+        normal.setColor(Color.WHITE);
+
+        final GradientDrawable clicked = new GradientDrawable();
+        clicked.setShape(GradientDrawable.RECTANGLE);
+        clicked.setStroke(2, Color.BLACK);
+        clicked.setColor(Color.parseColor("#7A26EC09"));
+
+        final GradientDrawable related = new GradientDrawable();
+        related.setShape(GradientDrawable.RECTANGLE);
+        related.setStroke(2, Color.BLACK);
+        related.setColor(Color.parseColor("#2A26EC09"));
+
+
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                final int finalI = i;
+                final int finalJ = j;
+                buttongrid[i][j] = new Button(this);
+                //buttongrid[i][j].setText(i+","+j);
+                buttongrid[i][j].setBackgroundDrawable(normal);
+                buttongrid[i][j].setLayoutParams(buttonlayout);
+                buttongrid[i][j].setOnClickListener(new CustomOnClickListener(finalI, finalJ) {
+                    @Override
+                    public void onClick(View view) {
+                        Button button = (Button) view;
+                        button.setBackgroundDrawable(clicked);
+                        if (current_button != null && current_button != button) {
+                            current_button.setBackgroundDrawable(normal);
+                        }
+                        current_button = button;
+
+                        //Uncolour previously related buttons
+                        while (!related_buttons.empty()) {
+                            Button uncolour_button = related_buttons.pop();
+                            if (uncolour_button != current_button) {
+                                uncolour_button.setBackgroundDrawable(normal);
+                            }
+                        }
+
+                        //Colour related buttons
+                        //Vertical
+                        for (int k = 0; k < 9; k++) {
+                            if (buttongrid[finalI][k] != current_button) {
+                                buttongrid[finalI][k].setBackgroundDrawable(related);
+                                related_buttons.push(buttongrid[finalI][k]);
+                            }
+                        }
+
+                        //Horizontal
+                        for (int k = 0; k < 9; k++) {
+                            if (buttongrid[k][finalJ] != current_button) {
+                                buttongrid[k][finalJ].setBackgroundDrawable(related);
+                                related_buttons.push(buttongrid[k][finalJ]);
+                            }
+                        }
+                        //Group has to be done 3x3 grid
+                    }
+                });
+                gridlayout.addView(buttongrid[i][j]);
+            }
+        }
+        System.out.println(gridlayout.getChildCount() + " Children in GridLayout");
